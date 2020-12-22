@@ -1,0 +1,11 @@
+#!/bin/sh
+
+set -e
+
+cd "$(dirname "$0")/.."
+
+echo "==> Checking for Homebrew..."
+if [ -z `command -v brew` ]; then
+    echo "==> Brew is missing! Installing it..."
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+fi

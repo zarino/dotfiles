@@ -1,0 +1,46 @@
+[include]
+    path = ~/.gitconfig_secret
+[core]
+    editor = code --wait
+    excludesfile = ~/.gitignore_global
+    autocrlf = input
+[diff]
+    tool = default-difftool
+[difftool "default-difftool"]
+    cmd = code --wait --diff $LOCAL $REMOTE
+[color]
+    diff = auto
+    status = auto
+    branch = auto
+[status]
+    relativePaths = false
+[alias]
+    ci = commit
+    co = checkout
+    lg = log --graph --abbrev-commit --date=short --pretty=tformat:'%C(yellow)%h %C(cyan)%ai%C(red)%d%Creset %s %C(green)<%an>%Creset' # add --all to show all branches
+    st = status -sb
+    branches = branch -av
+    remotes = remote -v
+    prune-all = !git remote | xargs -n 1 git remote prune
+    whatis = show -s --pretty='tformat:%h (%s, %ad)' --date=short
+    whois = "!sh -c 'git log -i -1 --pretty=\"format:%an <%ae>\n\" --author=\"$1\"' -"
+    unstage = reset HEAD
+    undo-commit = reset --soft HEAD^
+    poh = push origin HEAD -u
+    pohf = push origin HEAD -u --force-with-lease
+    ignore = git update-index --assume-unchanged
+    unignore = git update-index --no-assume-unchanged
+    set-upstream = !git branch --set-upstream-to=origin/`git symbolic-ref --short HEAD`
+    delete-merged = !git branch --merged | grep -v '^\\*' | xargs -n 1 git branch -d
+    delete-all = !git branch | grep -v '^\\*' | xargs git branch -D
+    whats-changed = !git log --no-merges origin/`git symbolic-ref --short HEAD`.. # what's changed on remote version of current branch
+    diff-master = !git diff master...`git symbolic-ref --short HEAD` # what's the difference between master and current branch
+    diff-master-files = !git diff --name-status master...`git symbolic-ref --short HEAD` # what files have changed between master and current branch
+    add-without-whitespace = !sh -c 'git diff -w --no-color "$@" | git apply --cached --ignore-whitespace' - # give it a file and it will add all changes except whitespace changes
+    rebase-since-master = !git rebase -i `git merge-base HEAD master`
+[push]
+    default = current
+[rebase]
+	autosquash = true
+[pull]
+	ff = only

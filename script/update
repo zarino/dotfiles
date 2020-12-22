@@ -1,0 +1,122 @@
+#!/bin/sh
+
+set -e
+
+cd "$(dirname "$0")/.."
+
+DOTFILES_DIR="$(pwd)"
+
+script/bootstrap
+
+echo "==> Recreating dotfile symlinks..."
+
+echo "    $HOME/.gemrc"
+rm -rf "$HOME/.gemrc"
+ln -s "$DOTFILES_DIR/.gemrc" "$HOME/.gemrc"
+
+echo "    $HOME/.gitconfig"
+rm -rf "$HOME/.gitconfig"
+ln -s "$DOTFILES_DIR/.gitconfig" "$HOME/.gitconfig"
+
+echo "    $HOME/.gitignore_global"
+rm -rf "$HOME/.gitignore_global"
+ln -s "$DOTFILES_DIR/.gitignore_global" "$HOME/.gitignore_global"
+
+echo "    $HOME/.zshrc"
+rm -rf "$HOME/.zshrc"
+ln -s "$DOTFILES_DIR/.zshrc" "$HOME/.zshrc"
+
+if [ ! -e "$HOME/.gitconfig_secret" ]; then
+    echo "==> NOTICE"
+    echo "    Remember to create a file at $HOME/.gitconfig_secret with your private Git/Github details."
+    echo "    See $DOTFILES_DIR/.gitconfig_secret.example for an example."
+fi
+
+echo "==> Updating Homebrew..."
+brew update
+
+echo "==> Installing/updating Homebrew packages from $DOTFILES_DIR/Brewfile..."
+brew bundle
+
+if [ -x "$(command -v vagrant)" ]; then
+    echo "==> Installing/updating vagrant plugins..."
+    vagrant plugin install vagrant-vbguest
+    vagrant plugin install vagrant-notify-forwarder
+fi
+
+if [ -x "$(command -v pipx)" ]; then
+    echo "==> Installing/updating pipx packages..."
+    if [ ! -x "$(command -v datasette)" ]; then
+        pipx install datasette
+    fi
+    if [ ! -x "$(command -v litecli)" ]; then
+        pipx install litecli
+    fi
+    if [ ! -x "$(command -v font-ranger)" ]; then
+        if [ -x "$(command -v node)" ]; then
+            npm install -g font-ranger
+            pipx install fonttools
+            pipx inject fonttools brotli zopfli
+        fi
+    fi
+fi
+
+DNSMASQ_CONF="/usr/local/etc/dnsmasq.conf"
+if [ -e "$DNSMASQ_CONF" ]; then
+    DNSMASQ_CONF_DIR="/usr/local/etc/dnsmasq.d"
+    DNSMASQ_ZARINO_CONF="$DNSMASQ_CONF_DIR/zarino.conf"
+    RESOLVER_CONF="/etc/resolver/localhost"
+
+    echo "==> Checking dnsmasq setup..."
+
+    MADE_CHANGE=0
+
+    LINE="conf-dir=$DNSMASQ_CONF_DIR/,*.conf"
+    if ! grep -q '^conf-dir=' "$DNSMASQ_CONF"; then
+        echo "    Appending conf-dir rule to $DNSMASQ_CONF"
+        echo >> "$DNSMASQ_CONF" # blank line first, to keep things tidy
+        echo "$LINE" >> "$DNSMASQ_CONF"
+        MADE_CHANGE=1
+    fi
+
+    LINE='address=/.localhost/127.0.0.1'
+    if ! grep -q "$LINE" "$DNSMASQ_ZARINO_CONF" 2>/dev/null; then
+        echo "    Creating custom dnsmasq config file at $DNSMASQ_ZARINO_CONF"
+        mkdir -p "$DNSMASQ_CONF_DIR"
+        echo "$LINE" > "$DNSMASQ_ZARINO_CONF"
+        MADE_CHANGE=1
+    fi
+
+    LINE="nameserver 127.0.0.1"
+    if ! grep -q "$LINE" "$RESOLVER_CONF" 2>/dev/null; then
+        echo "    Add a local resolver for .localhost domains in $RESOLVER_CONF"
+        echo "    (will require administrator privileges)"
+        sudo mkdir -vp /etc/resolver
+        sudo bash -c "echo 'nameserver 127.0.0.1' > $RESOLVER_CONF"
+        MADE_CHANGE=1
+    fi
+
+    if [ "$MADE_CHANGE" == 1 ]; then
+        echo "    Restarting dnsmasq..."
+        echo "    (will require administrator privileges)"
+        sudo brew services restart dnsmasq
+    fi
+fi
+
+APACHE_CONFIG="/usr/local/etc/httpd/httpd.conf"
+if [ -e "$APACHE_CONFIG" ]; then
+    echo "==> Checking Apache config..."
+
+    if ! grep -q 'ADDED BY ZARINO' "$APACHE_CONFIG"; then
+        echo "    Enabling rewrite and PHP modules in $APACHE_CONFIG"
+        cat <<EOF >> "$APACHE_CONFIG"
+
+# ADDED BY ZARINO
+LoadModule rewrite_module lib/httpd/modules/mod_rewrite.so
+LoadModule php7_module /usr/local/opt/php/lib/httpd/modules/libphp7.so
+<FilesMatch \.php>
+SetHandler application/x-httpd-php
+</FilesMatch>
+EOF
+    fi
+fi
