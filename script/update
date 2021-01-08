@@ -113,10 +113,13 @@ if [ -e "$APACHE_CONFIG" ]; then
 
 # ADDED BY ZARINO
 LoadModule rewrite_module lib/httpd/modules/mod_rewrite.so
-LoadModule php7_module /usr/local/opt/php/lib/httpd/modules/libphp7.so
+LoadModule php_module /usr/local/opt/php/lib/httpd/modules/libphp.so
 <FilesMatch \.php>
 SetHandler application/x-httpd-php
 </FilesMatch>
+<IfModule dir_module>
+DirectoryIndex index.php index.html
+</IfModule>
 EOF
     fi
 fi

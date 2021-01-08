@@ -17,7 +17,7 @@ brew "mariadb", restart_service: true
 brew "mcrypt"
 brew "moreutils"
 brew "node"
-brew "php@7.4", restart_service: true
+brew "php", restart_service: true
 brew "phpmyadmin"
 brew "pipx"
 brew "postgresql", restart_service: true
