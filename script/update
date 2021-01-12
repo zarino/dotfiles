@@ -37,6 +37,7 @@ brew update
 
 echo "==> Installing/updating Homebrew packages from $DOTFILES_DIR/Brewfile..."
 brew bundle
+brew upgrade --cask --greedy
 
 if [ -x "$(command -v vagrant)" ]; then
     echo "==> Installing/updating vagrant plugins..."
