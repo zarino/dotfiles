@@ -15,7 +15,7 @@
 [status]
     relativePaths = false
 [alias]
-    ci = commit
+    ci = commit -v
     co = checkout
     lg = log --graph --abbrev-commit --date=short --pretty=tformat:'%C(yellow)%h %C(cyan)%ai%C(red)%d%Creset %s %C(green)<%an>%Creset' # add --all to show all branches
     st = status -sb
