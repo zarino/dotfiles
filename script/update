@@ -3,124 +3,203 @@
 set -e
 
 cd "$(dirname "$0")/.."
-
 DOTFILES_DIR="$(pwd)"
 
-script/bootstrap
 
-echo "==> Recreating dotfile symlinks..."
+recreate_symlinks()
+{
+    echo "==> Recreating dotfile symlinks..."
 
-echo "    $HOME/.gemrc"
-rm -rf "$HOME/.gemrc"
-ln -s "$DOTFILES_DIR/.gemrc" "$HOME/.gemrc"
+    echo "    $HOME/.gemrc"
+    rm -rf "$HOME/.gemrc"
+    ln -s "$DOTFILES_DIR/.gemrc" "$HOME/.gemrc"
 
-echo "    $HOME/.gitconfig"
-rm -rf "$HOME/.gitconfig"
-ln -s "$DOTFILES_DIR/.gitconfig" "$HOME/.gitconfig"
+    echo "    $HOME/.gitconfig"
+    rm -rf "$HOME/.gitconfig"
+    ln -s "$DOTFILES_DIR/.gitconfig" "$HOME/.gitconfig"
 
-echo "    $HOME/.gitignore_global"
-rm -rf "$HOME/.gitignore_global"
-ln -s "$DOTFILES_DIR/.gitignore_global" "$HOME/.gitignore_global"
+    echo "    $HOME/.gitignore_global"
+    rm -rf "$HOME/.gitignore_global"
+    ln -s "$DOTFILES_DIR/.gitignore_global" "$HOME/.gitignore_global"
 
-echo "    $HOME/.zshrc"
-rm -rf "$HOME/.zshrc"
-ln -s "$DOTFILES_DIR/.zshrc" "$HOME/.zshrc"
+    echo "    $HOME/.zshrc"
+    rm -rf "$HOME/.zshrc"
+    ln -s "$DOTFILES_DIR/.zshrc" "$HOME/.zshrc"
 
-if [ ! -e "$HOME/.gitconfig_secret" ]; then
-    echo "==> NOTICE"
-    echo "    Remember to create a file at $HOME/.gitconfig_secret with your private Git/Github details."
-    echo "    See $DOTFILES_DIR/.gitconfig_secret.example for an example."
-fi
-
-echo "==> Updating Homebrew..."
-brew update
-
-echo "==> Installing/updating Homebrew packages from $DOTFILES_DIR/Brewfile..."
-brew bundle
-brew upgrade --cask --greedy
-
-if [ -x "$(command -v vagrant)" ]; then
-    echo "==> Installing/updating vagrant plugins..."
-    vagrant plugin install vagrant-vbguest
-    vagrant plugin install vagrant-notify-forwarder
-fi
-
-if [ -x "$(command -v pipx)" ]; then
-    echo "==> Installing/updating pipx packages..."
-    if [ ! -x "$(command -v datasette)" ]; then
-        pipx install datasette
+    if [ ! -e "$HOME/.gitconfig_secret" ]; then
+        echo "==> NOTICE"
+        echo "    Remember to create a file at $HOME/.gitconfig_secret with your private Git/Github details."
+        echo "    See $DOTFILES_DIR/.gitconfig_secret.example for an example."
     fi
-    if [ ! -x "$(command -v litecli)" ]; then
-        pipx install litecli
+}
+
+
+install_homebrew_packages()
+{
+    echo "==> Updating Homebrew..."
+    brew update
+
+    echo "==> Installing/updating Homebrew packages from $DOTFILES_DIR/Brewfile..."
+    brew bundle
+    brew upgrade --cask --greedy
+}
+
+
+install_vagrant_plugins()
+{
+    if [ -x "$(command -v vagrant)" ]; then
+        echo "==> Installing/updating vagrant plugins..."
+        vagrant plugin install vagrant-vbguest
+        vagrant plugin install vagrant-notify-forwarder
     fi
-    if [ ! -x "$(command -v font-ranger)" ]; then
-        if [ -x "$(command -v node)" ]; then
-            npm install -g font-ranger
-            pipx install fonttools
-            pipx inject fonttools brotli zopfli
+}
+
+
+install_pipx_packages()
+{
+    if [ -x "$(command -v pipx)" ]; then
+        echo "==> Installing/updating pipx packages..."
+        if [ ! -x "$(command -v datasette)" ]; then
+            pipx install datasette
+        fi
+        if [ ! -x "$(command -v litecli)" ]; then
+            pipx install litecli
+        fi
+        if [ ! -x "$(command -v font-ranger)" ]; then
+            if [ -x "$(command -v node)" ]; then
+                npm install -g font-ranger
+                pipx install fonttools
+                pipx inject fonttools brotli zopfli
+            fi
         fi
     fi
-fi
+}
 
-DNSMASQ_CONF="/usr/local/etc/dnsmasq.conf"
-if [ -e "$DNSMASQ_CONF" ]; then
-    DNSMASQ_CONF_DIR="/usr/local/etc/dnsmasq.d"
-    DNSMASQ_ZARINO_CONF="$DNSMASQ_CONF_DIR/zarino.conf"
-    RESOLVER_CONF="/etc/resolver/localhost"
 
-    echo "==> Checking dnsmasq setup..."
+set_up_dnsmasq()
+{
+    DNSMASQ_CONF="/usr/local/etc/dnsmasq.conf"
+    if [ -e "$DNSMASQ_CONF" ]; then
+        DNSMASQ_CONF_DIR="/usr/local/etc/dnsmasq.d"
+        DNSMASQ_ZARINO_CONF="$DNSMASQ_CONF_DIR/zarino.conf"
+        RESOLVER_CONF="/etc/resolver/localhost"
 
-    MADE_CHANGE=0
+        echo "==> Checking dnsmasq setup..."
 
-    LINE="conf-dir=$DNSMASQ_CONF_DIR/,*.conf"
-    if ! grep -q '^conf-dir=' "$DNSMASQ_CONF"; then
-        echo "    Appending conf-dir rule to $DNSMASQ_CONF"
-        echo >> "$DNSMASQ_CONF" # blank line first, to keep things tidy
-        echo "$LINE" >> "$DNSMASQ_CONF"
-        MADE_CHANGE=1
+        MADE_CHANGE=0
+
+        LINE="conf-dir=$DNSMASQ_CONF_DIR/,*.conf"
+        if ! grep -q '^conf-dir=' "$DNSMASQ_CONF"; then
+            echo "    Appending conf-dir rule to $DNSMASQ_CONF"
+            echo >> "$DNSMASQ_CONF" # blank line first, to keep things tidy
+            echo "$LINE" >> "$DNSMASQ_CONF"
+            MADE_CHANGE=1
+        fi
+
+        LINE='address=/.localhost/127.0.0.1'
+        if ! grep -q "$LINE" "$DNSMASQ_ZARINO_CONF" 2>/dev/null; then
+            echo "    Creating custom dnsmasq config file at $DNSMASQ_ZARINO_CONF"
+            mkdir -p "$DNSMASQ_CONF_DIR"
+            echo "$LINE" > "$DNSMASQ_ZARINO_CONF"
+            MADE_CHANGE=1
+        fi
+
+        LINE="nameserver 127.0.0.1"
+        if ! grep -q "$LINE" "$RESOLVER_CONF" 2>/dev/null; then
+            echo "    Add a local resolver for .localhost domains in $RESOLVER_CONF"
+            echo "    (will require administrator privileges)"
+            sudo mkdir -vp /etc/resolver
+            sudo bash -c "echo 'nameserver 127.0.0.1' > $RESOLVER_CONF"
+            MADE_CHANGE=1
+        fi
+
+        if [ "$MADE_CHANGE" == 1 ]; then
+            echo "    Restarting dnsmasq..."
+            echo "    (will require administrator privileges)"
+            sudo brew services restart dnsmasq
+        fi
     fi
+}
 
-    LINE='address=/.localhost/127.0.0.1'
-    if ! grep -q "$LINE" "$DNSMASQ_ZARINO_CONF" 2>/dev/null; then
-        echo "    Creating custom dnsmasq config file at $DNSMASQ_ZARINO_CONF"
-        mkdir -p "$DNSMASQ_CONF_DIR"
-        echo "$LINE" > "$DNSMASQ_ZARINO_CONF"
-        MADE_CHANGE=1
-    fi
 
-    LINE="nameserver 127.0.0.1"
-    if ! grep -q "$LINE" "$RESOLVER_CONF" 2>/dev/null; then
-        echo "    Add a local resolver for .localhost domains in $RESOLVER_CONF"
-        echo "    (will require administrator privileges)"
-        sudo mkdir -vp /etc/resolver
-        sudo bash -c "echo 'nameserver 127.0.0.1' > $RESOLVER_CONF"
-        MADE_CHANGE=1
-    fi
+set_up_apache_config()
+{
+    APACHE_CONFD="/usr/local/etc/httpd/conf.d"
+    echo "==> Creating custom Apache conf files in $APACHE_CONFD"
+    mkdir -p "$APACHE_CONFD"
 
-    if [ "$MADE_CHANGE" == 1 ]; then
-        echo "    Restarting dnsmasq..."
-        echo "    (will require administrator privileges)"
-        sudo brew services restart dnsmasq
-    fi
-fi
+    echo "    $APACHE_CONFD/rewrite.conf"
+    cat <<EOF > "$APACHE_CONFD/rewrite.conf"
+# managed by zarino/dotfiles
 
-APACHE_CONFIG="/usr/local/etc/httpd/httpd.conf"
-if [ -e "$APACHE_CONFIG" ]; then
-    echo "==> Checking Apache config..."
+LoadModule rewrite_module lib/httpd/modules/mod_rewrite.so
+EOF
 
-    if ! grep -q 'ADDED BY ZARINO' "$APACHE_CONFIG"; then
-        echo "    Enabling rewrite and PHP modules in $APACHE_CONFIG"
-        cat <<EOF >> "$APACHE_CONFIG"
+    echo "    $APACHE_CONFD/vhosts.conf"
+    cat <<EOF > "$APACHE_CONFD/vhosts.conf"
+# managed by zarino/dotfiles
 
-# ADDED BY ZARINO
+LoadModule vhost_alias_module lib/httpd/modules/mod_vhost_alias.so
+EOF
+
+    echo "    $APACHE_CONFD/php.conf"
+    cat <<EOF > "$APACHE_CONFD/php.conf"
+# managed by zarino/dotfiles
+
 LoadModule rewrite_module lib/httpd/modules/mod_rewrite.so
 LoadModule php_module /usr/local/opt/php/lib/httpd/modules/libphp.so
 <FilesMatch \.php>
-SetHandler application/x-httpd-php
+    SetHandler application/x-httpd-php
 </FilesMatch>
 <IfModule dir_module>
-DirectoryIndex index.php index.html
+    DirectoryIndex index.php index.html
 </IfModule>
 EOF
+
+    echo "    $APACHE_CONFD/phpmyadmin.conf"
+    PHPMYADMIN_DIR="$(brew --prefix)/share/phpmyadmin"
+    cat <<EOF > "$APACHE_CONFD/phpmyadmin.conf"
+# managed by zarino/dotfiles
+
+<VirtualHost *:8080>
+    ServerName phpmyadmin.localhost
+    DocumentRoot "/usr/local/share/phpmyadmin"
+    <Directory "/usr/local/share/phpmyadmin">
+        Options Indexes FollowSymLinks MultiViews
+        AllowOverride All
+        <IfModule mod_authz_core.c>
+            Require all granted
+        </IfModule>
+        <IfModule !mod_authz_core.c>
+            Order allow,deny
+            Allow from all
+        </IfModule>
+    </Directory>
+</VirtualHost>
+EOF
+
+    APACHE_CONFIG="/usr/local/etc/httpd/httpd.conf"
+    if [ -e "$APACHE_CONFIG" ]; then
+        if ! grep -q "IncludeOptional $APACHE_CONFD" "$APACHE_CONFIG"; then
+            echo "==> Including $APACHE_CONFD in $APACHE_CONFIG"
+            cat <<EOF >> "$APACHE_CONFIG"
+
+
+# added by zarino/dotfiles
+IncludeOptional /usr/local/etc/httpd/conf.d/*.conf
+EOF
+        fi
     fi
-fi
+
+    echo "==> Restarting Apache"
+    brew services restart httpd
+}
+
+
+script/bootstrap
+recreate_symlinks
+install_homebrew_packages
+install_vagrant_plugins
+install_pipx_packages
+set_up_dnsmasq
+set_up_apache_config
