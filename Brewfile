@@ -6,6 +6,7 @@ tap "sass/sass"
 
 brew "ansible"
 brew "blueutil"
+brew "closure-compiler"
 brew "dart-lang/dart/dart"
 brew "dnsmasq", restart_service: true
 brew "homebrew-ffmpeg/ffmpeg/ffmpeg", args: ["with-fdk-aac"]
