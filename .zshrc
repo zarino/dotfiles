@@ -1,3 +1,22 @@
+# https://flutter.dev/docs/get-started/install/macos
+export PATH="$HOME/src/flutter/bin:$PATH"
+
+# https://stackoverflow.com/questions/26483370
+# https://www.stkent.com/2017/08/10/update-your-path-for-the-new-android-emulator-location.html
+export ANDROID_SDK_ROOT="$HOME/Library/Android/sdk"
+export ANDROID_HOME="$ANDROID_SDK_ROOT"
+export PATH="$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$PATH"
+export PATH="$ANDROID_SDK_ROOT/platform-tools:$PATH"
+export PATH="$ANDROID_SDK_ROOT/tools:$PATH"
+export PATH="$ANDROID_SDK_ROOT/emulator:$PATH"
+
+# Add ~/bin to the path, ahead of all others.
+export PATH="$HOME/bin:$PATH"
+
+# Add ~/.local/bin to the path – this is where pipx puts executables.
+# https://pipxproject.github.io/pipx/installation/
+export PATH="$PATH:$HOME/.local/bin"
+
 # This is the default, but no harm in repeating.
 HISTFILE=${ZDOTDIR:-$HOME}/.zsh_history
 
@@ -94,22 +113,3 @@ export LSCOLORS=DxGxcxdxCxegedabagacad
 # Set up the rbenv shims.
 # https://github.com/rbenv/rbenv#how-rbenv-hooks-into-your-shell
 eval "$(rbenv init -)"
-
-# https://flutter.dev/docs/get-started/install/macos
-export PATH="$HOME/src/flutter/bin:$PATH"
-
-# https://stackoverflow.com/questions/26483370
-# https://www.stkent.com/2017/08/10/update-your-path-for-the-new-android-emulator-location.html
-export ANDROID_SDK_ROOT="$HOME/Library/Android/sdk"
-export ANDROID_HOME="$ANDROID_SDK_ROOT"
-export PATH="$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$PATH"
-export PATH="$ANDROID_SDK_ROOT/platform-tools:$PATH"
-export PATH="$ANDROID_SDK_ROOT/tools:$PATH"
-export PATH="$ANDROID_SDK_ROOT/emulator:$PATH"
-
-# Add ~/bin to the path, ahead of all others.
-export PATH="$HOME/bin:$PATH"
-
-# Add ~/.local/bin to the path – this is where pipx puts executables.
-# https://pipxproject.github.io/pipx/installation/
-export PATH="$PATH:$HOME/.local/bin"
