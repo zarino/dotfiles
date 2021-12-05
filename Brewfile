@@ -24,6 +24,7 @@ brew "pipx"
 brew "postgresql", restart_service: true
 brew "python"
 brew "rbenv"
+brew "rsync"
 brew "sass/sass/sass"
 brew "ssh-copy-id"
 brew "svgo"
