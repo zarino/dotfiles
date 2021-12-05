@@ -4,6 +4,7 @@ set -e
 
 cd "$(dirname "$0")/.."
 DOTFILES_DIR="$(pwd)"
+BREW_DIR="$(brew --prefix)"
 
 
 recreate_symlinks()
@@ -78,9 +79,9 @@ install_pipx_packages()
 
 set_up_dnsmasq()
 {
-    DNSMASQ_CONF="/usr/local/etc/dnsmasq.conf"
+    DNSMASQ_CONF="$BREW_DIR/etc/dnsmasq.conf"
     if [ -e "$DNSMASQ_CONF" ]; then
-        DNSMASQ_CONF_DIR="/usr/local/etc/dnsmasq.d"
+        DNSMASQ_CONF_DIR="$BREW_DIR/etc/dnsmasq.d"
         DNSMASQ_ZARINO_CONF="$DNSMASQ_CONF_DIR/zarino.conf"
         RESOLVER_CONF="/etc/resolver/localhost"
 
@@ -124,7 +125,7 @@ set_up_dnsmasq()
 
 set_up_apache_config()
 {
-    APACHE_CONFD="/usr/local/etc/httpd/conf.d"
+    APACHE_CONFD="$BREW_DIR/etc/httpd/conf.d"
     echo "==> Creating custom Apache conf files in $APACHE_CONFD"
     mkdir -p "$APACHE_CONFD"
 
@@ -147,7 +148,7 @@ EOF
 # managed by zarino/dotfiles
 
 LoadModule rewrite_module lib/httpd/modules/mod_rewrite.so
-LoadModule php_module /usr/local/opt/php/lib/httpd/modules/libphp.so
+LoadModule php_module $BREW_DIR/opt/php/lib/httpd/modules/libphp.so
 <FilesMatch \.php>
     SetHandler application/x-httpd-php
 </FilesMatch>
@@ -157,14 +158,14 @@ LoadModule php_module /usr/local/opt/php/lib/httpd/modules/libphp.so
 EOF
 
     echo "    $APACHE_CONFD/phpmyadmin.conf"
-    PHPMYADMIN_DIR="$(brew --prefix)/share/phpmyadmin"
+    PHPMYADMIN_DIR="$BREW_DIR/share/phpmyadmin"
     cat <<EOF > "$APACHE_CONFD/phpmyadmin.conf"
 # managed by zarino/dotfiles
 
 <VirtualHost *:8080>
     ServerName phpmyadmin.localhost
-    DocumentRoot "/usr/local/share/phpmyadmin"
-    <Directory "/usr/local/share/phpmyadmin">
+    DocumentRoot "$BREW_DIR/share/phpmyadmin"
+    <Directory "$BREW_DIR/share/phpmyadmin">
         Options Indexes FollowSymLinks MultiViews
         AllowOverride All
         <IfModule mod_authz_core.c>
@@ -178,7 +179,7 @@ EOF
 </VirtualHost>
 EOF
 
-    APACHE_CONFIG="/usr/local/etc/httpd/httpd.conf"
+    APACHE_CONFIG="$BREW_DIR/etc/httpd/httpd.conf"
     if [ -e "$APACHE_CONFIG" ]; then
         if ! grep -q "IncludeOptional $APACHE_CONFD" "$APACHE_CONFIG"; then
             echo "==> Including $APACHE_CONFD in $APACHE_CONFIG"
@@ -186,7 +187,7 @@ EOF
 
 
 # added by zarino/dotfiles
-IncludeOptional /usr/local/etc/httpd/conf.d/*.conf
+IncludeOptional $BREW_DIR/etc/httpd/conf.d/*.conf
 EOF
         fi
     fi
