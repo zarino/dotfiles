@@ -12,20 +12,16 @@ recreate_symlinks()
     echo "==> Recreating dotfile symlinks..."
 
     echo "    $HOME/.gemrc"
-    rm -rf "$HOME/.gemrc"
-    ln -s "$DOTFILES_DIR/.gemrc" "$HOME/.gemrc"
+    ln -sfn "$DOTFILES_DIR/.gemrc" "$HOME/.gemrc"
 
     echo "    $HOME/.gitconfig"
-    rm -rf "$HOME/.gitconfig"
-    ln -s "$DOTFILES_DIR/.gitconfig" "$HOME/.gitconfig"
+    ln -sfn "$DOTFILES_DIR/.gitconfig" "$HOME/.gitconfig"
 
     echo "    $HOME/.gitignore_global"
-    rm -rf "$HOME/.gitignore_global"
-    ln -s "$DOTFILES_DIR/.gitignore_global" "$HOME/.gitignore_global"
+    ln -sfn "$DOTFILES_DIR/.gitignore_global" "$HOME/.gitignore_global"
 
     echo "    $HOME/.zshrc"
-    rm -rf "$HOME/.zshrc"
-    ln -s "$DOTFILES_DIR/.zshrc" "$HOME/.zshrc"
+    ln -sfn "$DOTFILES_DIR/.zshrc" "$HOME/.zshrc"
 
     if [ ! -e "$HOME/.gitconfig_secret" ]; then
         echo "==> NOTICE"
