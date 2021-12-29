@@ -45,6 +45,18 @@ install_homebrew_packages()
 }
 
 
+install_ruby_and_gems()
+{
+    if [ -x "$(command -v rbenv)" ]; then
+        rbenv install --skip-existing 2.7.5
+        rbenv global 2.7.5
+        gem install bundler
+        bundle install
+        rbenv rehash
+    fi
+}
+
+
 install_vagrant_plugins()
 {
     if [ -x "$(command -v vagrant)" ]; then
@@ -199,6 +211,7 @@ EOF
 script/bootstrap
 recreate_symlinks
 install_homebrew_packages
+install_ruby_and_gems
 install_vagrant_plugins
 install_pipx_packages
 set_up_dnsmasq

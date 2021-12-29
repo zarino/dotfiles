@@ -93,4 +93,4 @@ export LSCOLORS=DxGxcxdxCxegedabagacad
 
 # Set up the rbenv shims.
 # https://github.com/rbenv/rbenv#how-rbenv-hooks-into-your-shell
-eval "$(rbenv init -)"
+eval "$(rbenv init - zsh)"
