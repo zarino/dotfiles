@@ -2,9 +2,12 @@
 
 tap "dart-lang/dart"
 tap "homebrew-ffmpeg/ffmpeg"
+tap "mutagen-io/mutagen"
 tap "sass/sass"
+tap "yt-dlp/taps"
 
 brew "ansible"
+brew "atomicparsley" # https://github.com/yt-dlp/yt-dlp#dependencies
 brew "blueutil"
 brew "closure-compiler"
 brew "dart-lang/dart/dart"
@@ -17,6 +20,7 @@ brew "imagemagick"
 brew "mariadb", restart_service: true
 brew "mcrypt"
 brew "moreutils"
+brew "mutagen-io/mutagen/mutagen" # https://github.com/yt-dlp/yt-dlp#dependencies
 brew "node"
 brew "php", restart_service: true
 brew "phpmyadmin"
@@ -34,7 +38,7 @@ brew "the_silver_searcher"
 brew "watch"
 brew "wget"
 brew "wp-cli"
-brew "youtube-dl"
+brew "yt-dlp/taps/yt-dlp"
 
 cask "docker"
 # cask "vagrant"
