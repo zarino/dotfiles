@@ -22,6 +22,8 @@
     diff-master-files = !git diff --name-status master...`git symbolic-ref --short HEAD` # what files have changed between master and current branch
     add-without-whitespace = !sh -c 'git diff -w --no-color "$@" | git apply --cached --ignore-whitespace' - # give it a file and it will add all changes except whitespace changes
     rebase-since-master = !git rebase -i `git merge-base HEAD master`
+[checkout]
+    defaultRemote = origin
 [color]
     diff = auto
     status = auto
