@@ -12,6 +12,7 @@
     undo-commit = reset --soft HEAD^
     poh = push origin HEAD -u
     pohf = push origin HEAD -u --force-with-lease
+    roh = !git reset --hard origin/`git symbolic-ref --short HEAD`
     ignore = git update-index --assume-unchanged
     unignore = git update-index --no-assume-unchanged
     set-upstream = !git branch --set-upstream-to=origin/`git symbolic-ref --short HEAD`
