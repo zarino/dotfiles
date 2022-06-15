@@ -27,6 +27,3 @@ export PATH="${HOME}/.local/bin:${PATH}"
 
 # Add ~/bin to the path, ahead of all others.
 export PATH="${HOME}/bin:${PATH}"
-
-# https://jekyllrb.com/docs/installation/macos/
-export SDKROOT=$(xcrun --show-sdk-path)
