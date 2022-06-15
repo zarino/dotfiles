@@ -94,3 +94,8 @@ export LSCOLORS=DxGxcxdxCxegedabagacad
 # Set up the rbenv shims.
 # https://github.com/rbenv/rbenv#how-rbenv-hooks-into-your-shell
 eval "$(rbenv init - zsh)"
+
+if ! grep -q "pam_tid.so" /etc/pam.d/sudo ; then
+    echo "Touch ID no longer enabled for sudo. Insert the following line at the start of /etc/pam.d/sudo:"
+    echo "  auth       sufficient     pam_tid.so"
+fi
