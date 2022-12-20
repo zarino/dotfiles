@@ -13,6 +13,7 @@ brew "closure-compiler"
 brew "dart-lang/dart/dart"
 brew "dnsmasq", restart_service: true
 brew "homebrew-ffmpeg/ffmpeg/ffmpeg", args: ["with-fdk-aac"]
+brew "fontforge"
 brew "gifsicle"
 brew "git"
 brew "httpd", restart_service: true
