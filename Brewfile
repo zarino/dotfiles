@@ -26,7 +26,7 @@ brew "node"
 brew "php", restart_service: true
 brew "phpmyadmin"
 brew "pipx"
-brew "postgresql", restart_service: true
+brew "postgresql@14", restart_service: true
 brew "python"
 brew "rbenv"
 brew "restic"
