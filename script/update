@@ -20,6 +20,9 @@ recreate_symlinks()
     echo "    $HOME/.gitignore_global"
     ln -sfn "$DOTFILES_DIR/.gitignore_global" "$HOME/.gitignore_global"
 
+    echo "    $HOME/.sqliterc"
+    ln -sfn "$DOTFILES_DIR/.sqliterc" "$HOME/.sqliterc"
+
     echo "    $HOME/.zshenv"
     ln -sfn "$DOTFILES_DIR/.zshenv" "$HOME/.zshenv"
 
