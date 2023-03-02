@@ -41,6 +41,7 @@ brew "wget"
 brew "wp-cli"
 brew "yt-dlp/taps/yt-dlp"
 
+cask "android-platform-tools"
 cask "docker"
 # cask "vagrant"
 # cask "virtualbox"
