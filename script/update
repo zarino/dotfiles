@@ -70,23 +70,36 @@ install_vagrant_plugins()
 }
 
 
+install_node_packages()
+{
+    if [ ! -x "$(command -v font-ranger)" ]; then
+        npm install -g font-ranger
+    fi
+}
+
+
 install_pipx_packages()
 {
     if [ -x "$(command -v pipx)" ]; then
         echo "==> Installing/updating pipx packages..."
-        if [ ! -x "$(command -v datasette)" ]; then
-            pipx install datasette
-        fi
-        if [ ! -x "$(command -v litecli)" ]; then
-            pipx install litecli
-        fi
-        if [ ! -x "$(command -v font-ranger)" ]; then
-            if [ -x "$(command -v node)" ]; then
-                npm install -g font-ranger
-                pipx install fonttools
-                pipx inject fonttools brotli zopfli
-            fi
-        fi
+        pipx_install_if_not_exists datasette
+        pipx_install_if_not_exists csvs-to-sqlite
+        pipx_install_if_not_exists litecli
+
+        # fonttools, brotli, and zopfli for (npm) font-ranger
+        # https://github.com/doasync/font-ranger
+        pipx_install_if_not_exists fonttools
+        pipx inject fonttools brotli zopfli
+
+        pipx upgrade-all --include-injected
+    fi
+}
+
+
+pipx_install_if_not_exists()
+{
+    if [ ! -x "$(command -v $1)" ]; then
+        pipx install "$1"
     fi
 }
 
@@ -217,5 +230,6 @@ install_homebrew_packages
 install_ruby_and_gems
 install_vagrant_plugins
 install_pipx_packages
+install_node_packages
 set_up_dnsmasq
 set_up_apache_config
