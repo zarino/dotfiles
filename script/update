@@ -75,6 +75,10 @@ install_node_packages()
     if [ ! -x "$(command -v font-ranger)" ]; then
         npm install -g font-ranger
     fi
+
+    if [ ! -x "$(command -v lt)" ]; then
+        npm install -g localtunnel
+    fi
 }
 
 
