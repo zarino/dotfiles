@@ -53,6 +53,11 @@ export HOMEBREW_NO_ANALYTICS=1
 # https://docs.brew.sh/Shell-Completion
 FPATH=$(brew --prefix)/share/zsh/site-functions:$FPATH
 
+# Addition to PATH and autocompletion for Google Cloud SDK
+# https://formulae.brew.sh/cask/google-cloud-sdk
+source "$(brew --prefix)/share/google-cloud-sdk/path.zsh.inc"
+source "$(brew --prefix)/share/google-cloud-sdk/completion.zsh.inc"
+
 # `repo` command to quickly jump to a subdirectory of ~/repos,
 # with autocompletion of subdirectory names.
 repo() {
