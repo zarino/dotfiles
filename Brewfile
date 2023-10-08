@@ -6,7 +6,6 @@ tap "mutagen-io/mutagen"
 tap "sass/sass"
 tap "yt-dlp/taps"
 
-brew "ansible"
 brew "atomicparsley" # https://github.com/yt-dlp/yt-dlp#dependencies
 brew "blueutil"
 brew "closure-compiler"
@@ -49,3 +48,4 @@ cask "android-platform-tools"
 cask "rar"
 cask "sequel-ace"
 cask "google-cloud-sdk"
+cask "qlvideo"
