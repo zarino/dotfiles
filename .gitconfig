@@ -19,8 +19,7 @@
     delete-merged = !git branch --merged | grep -v '^\\*' | xargs -n 1 git branch -d
     delete-all = !git branch | grep -v '^\\*' | xargs git branch -D
     whats-changed = !git log --no-merges origin/`git symbolic-ref --short HEAD`.. # what's changed on remote version of current branch
-    diff-master = !git diff master...`git symbolic-ref --short HEAD` # what's the difference between master and current branch
-    diff-master-files = !git diff --name-status master...`git symbolic-ref --short HEAD` # what files have changed between master and current branch
+    files-changed = "!git diff --name-status $(git merge-base $1 $2) $1 #" # probably want $1 to be a feature branch, $2 to be main or master
     add-without-whitespace = !sh -c 'git diff -w --no-color "$@" | git apply --cached --ignore-whitespace' - # give it a file and it will add all changes except whitespace changes
     rebase-since-master = !git rebase -i `git merge-base HEAD master`
 [checkout]
