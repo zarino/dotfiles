@@ -49,6 +49,17 @@ zstyle ':completion:*:(ssh|scp|ftp|sftp):*' users $users
 # https://docs.brew.sh/Analytics
 export HOMEBREW_NO_ANALYTICS=1
 
+# Add Homebrew to the path on Apple Silicon Macs
+if [ -d "/opt/homebrew" ]; then
+    # From `/opt/homebrew/bin/brew shellenv`
+    export HOMEBREW_PREFIX="/opt/homebrew";
+    export HOMEBREW_CELLAR="/opt/homebrew/Cellar";
+    export HOMEBREW_REPOSITORY="/opt/homebrew";
+    export PATH="/opt/homebrew/bin:/opt/homebrew/sbin${PATH+:$PATH}";
+    export MANPATH="/opt/homebrew/share/man${MANPATH+:$MANPATH}:";
+    export INFOPATH="/opt/homebrew/share/info:${INFOPATH:-}";
+fi
+
 # Autocompletion for Homebrew commands.
 # https://docs.brew.sh/Shell-Completion
 FPATH=$(brew --prefix)/share/zsh/site-functions:$FPATH
@@ -84,6 +95,10 @@ autoload -Uz compinit && compinit
 # Enable bash-compatible autocompletion scripts.
 autoload -U bashcompinit && bashcompinit
 
+# Add ~/.local/bin to the path – this is where pipx puts executables.
+# https://pipxproject.github.io/pipx/installation/
+export PATH="${HOME}/.local/bin:${PATH}"
+
 # Autocompletion for pipx.
 # https://pipxproject.github.io/pipx/
 eval "$(register-python-argcomplete pipx)"
@@ -99,6 +114,25 @@ export LSCOLORS=DxGxcxdxCxegedabagacad
 # Set up the rbenv shims.
 # https://github.com/rbenv/rbenv#how-rbenv-hooks-into-your-shell
 eval "$(rbenv init - zsh)"
+
+# https://flutter.dev/docs/get-started/install/macos
+export PATH="${HOME}/src/flutter/bin:${PATH}"
+
+# https://stackoverflow.com/questions/26483370
+# https://www.stkent.com/2017/08/10/update-your-path-for-the-new-android-emulator-location.html
+export ANDROID_SDK_ROOT="${HOME}/Library/Android/sdk"
+export ANDROID_HOME="$ANDROID_SDK_ROOT"
+export PATH="$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:${PATH}"
+export PATH="$ANDROID_SDK_ROOT/platform-tools:${PATH}"
+export PATH="$ANDROID_SDK_ROOT/tools:${PATH}"
+export PATH="$ANDROID_SDK_ROOT/emulator:${PATH}"
+
+# Add ~/.docker/bin to the path
+# https://docs.docker.com/desktop/install/mac-install/
+export PATH="${HOME}/.docker/bin:${PATH}"
+
+# Add ~/bin to the path, ahead of all others.
+export PATH="${HOME}/bin:${PATH}"
 
 if ! grep -q "pam_tid.so" /etc/pam.d/sudo ; then
     echo "Touch ID no longer enabled for sudo. Insert the following line at the start of /etc/pam.d/sudo:"

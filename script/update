@@ -23,9 +23,6 @@ recreate_symlinks()
     echo "    $HOME/.sqliterc"
     ln -sfn "$DOTFILES_DIR/.sqliterc" "$HOME/.sqliterc"
 
-    echo "    $HOME/.zshenv"
-    ln -sfn "$DOTFILES_DIR/.zshenv" "$HOME/.zshenv"
-
     echo "    $HOME/.zshrc"
     ln -sfn "$DOTFILES_DIR/.zshrc" "$HOME/.zshrc"
 
