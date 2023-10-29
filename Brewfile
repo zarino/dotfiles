@@ -18,6 +18,7 @@ brew "git"
 brew "httpd", restart_service: true
 brew "imagemagick"
 brew "mariadb", restart_service: true
+brew "media-info"
 brew "mcrypt"
 brew "moreutils"
 brew "mutagen-io/mutagen/mutagen" # https://github.com/yt-dlp/yt-dlp#dependencies
