@@ -4,7 +4,6 @@ tap "dart-lang/dart"
 tap "homebrew-ffmpeg/ffmpeg"
 tap "mutagen-io/mutagen"
 tap "sass/sass"
-tap "yt-dlp/taps"
 
 brew "atomicparsley" # https://github.com/yt-dlp/yt-dlp#dependencies
 brew "blueutil"
@@ -39,7 +38,7 @@ brew "the_silver_searcher"
 brew "watch"
 brew "wget"
 brew "wp-cli"
-brew "yt-dlp/taps/yt-dlp"
+brew "yt-dlp"
 
 cask "android-platform-tools"
 # cask "docker"
