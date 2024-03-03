@@ -8,7 +8,6 @@ tap "sass/sass"
 brew "atomicparsley" # https://github.com/yt-dlp/yt-dlp#dependencies
 brew "blueutil"
 brew "closure-compiler"
-brew "dart-lang/dart/dart"
 brew "dnsmasq", restart_service: true
 brew "homebrew-ffmpeg/ffmpeg/ffmpeg", args: ["with-fdk-aac"]
 brew "fontforge"
@@ -40,11 +39,6 @@ brew "wget"
 brew "wp-cli"
 brew "yt-dlp"
 
-cask "android-platform-tools"
-# cask "docker"
-# cask "vagrant"
-# cask "virtualbox"
-# cask "java"
 cask "rar"
 cask "sequel-ace"
 cask "google-cloud-sdk"
