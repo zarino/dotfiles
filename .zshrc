@@ -137,7 +137,7 @@ export PATH="${HOME}/bin:${PATH}"
 # https://python-poetry.org/docs/configuration/#using-environment-variables
 export POETRY_VIRTUALENVS_IN_PROJECT="true" # will create .venv directories in project root
 
-if ! grep -q "pam_tid.so" /etc/pam.d/sudo ; then
-    echo "Touch ID no longer enabled for sudo. Insert the following line at the start of /etc/pam.d/sudo:"
+if ! grep -q "pam_tid.so" /etc/pam.d/sudo* ; then
+    echo "Touch ID no longer enabled for sudo. Insert the following line at the start of /etc/pam.d/sudo_local:"
     echo "  auth       sufficient     pam_tid.so"
 fi
