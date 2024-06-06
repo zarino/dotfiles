@@ -93,6 +93,12 @@ install_pipx_packages()
         pipx_install_if_not_exists fonttools
         pipx inject fonttools brotli zopfli
 
+        pipx_install_if_not_exists "vpype[all]"
+        pipx inject vpype vpype-gcode
+
+        # https://github.com/codeinthehole/csvfilter/issues/13
+        pipx_install_if_not_exists "git+https://github.com/lk-jeffpeck/csvfilter.git@ec433f14330fbbf5d41f56febfeedac22868a949"
+
         pipx upgrade-all --include-injected
     fi
 }
