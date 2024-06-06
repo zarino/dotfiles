@@ -10,8 +10,8 @@
     whois = "!sh -c 'git log -i -1 --pretty=\"format:%an <%ae>\n\" --author=\"$1\"' -"
     unstage = reset HEAD
     undo-commit = reset --soft HEAD^
-    poh = push origin HEAD -u
-    pohf = push origin HEAD -u --force-with-lease
+    poh = push origin HEAD -u --tags
+    pohf = push origin HEAD -u --tags --force-with-lease
     roh = !git reset --hard origin/`git symbolic-ref --short HEAD`
     ignore = git update-index --assume-unchanged
     unignore = git update-index --no-assume-unchanged
