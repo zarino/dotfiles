@@ -57,24 +57,14 @@ install_ruby_and_gems()
 }
 
 
-install_vagrant_plugins()
-{
-    if [ -x "$(command -v vagrant)" ]; then
-        echo "==> Installing/updating vagrant plugins..."
-        vagrant plugin install vagrant-vbguest
-        vagrant plugin install vagrant-notify-forwarder
-    fi
-}
-
-
 install_node_packages()
 {
-    if [ ! -x "$(command -v font-ranger)" ]; then
-        npm install -g font-ranger
-    fi
-
-    if [ ! -x "$(command -v lt)" ]; then
-        npm install -g localtunnel
+    if [ -x "$(command -v npm)" ]; then
+        echo "==> Installing/updating node packages..."
+        # note: npm install installs or updates to latest version
+        npm install --global --loglevel=error font-ranger
+        npm install --global --loglevel=error localtunnel
+        npm install --global --loglevel=error mapshaper
     fi
 }
 
@@ -90,14 +80,20 @@ install_pipx_packages()
 
         # fonttools, brotli, and zopfli for (npm) font-ranger
         # https://github.com/doasync/font-ranger
-        pipx_install_if_not_exists fonttools
-        pipx inject fonttools brotli zopfli
+        if [ ! -x "$(command -v fonttools)" ]; then
+            pipx install fonttools
+            pipx inject fonttools brotli zopfli
+        fi
 
-        pipx_install_if_not_exists "vpype[all]"
-        pipx inject vpype vpype-gcode
+        if [ ! -x "$(command -v vpype)" ]; then
+            pipx install "vpype[all]"
+            pipx inject vpype vpype-gcode
+        fi
 
-        # https://github.com/codeinthehole/csvfilter/issues/13
-        pipx_install_if_not_exists "git+https://github.com/lk-jeffpeck/csvfilter.git@ec433f14330fbbf5d41f56febfeedac22868a949"
+        if [ ! -x "$(command -v csvfilter)" ]; then
+            # https://github.com/codeinthehole/csvfilter/issues/13
+            pipx install "git+https://github.com/lk-jeffpeck/csvfilter.git@ec433f14330fbbf5d41f56febfeedac22868a949"
+        fi
 
         pipx upgrade-all --include-injected
     fi
@@ -236,7 +232,6 @@ script/bootstrap
 recreate_symlinks
 install_homebrew_packages
 install_ruby_and_gems
-install_vagrant_plugins
 install_pipx_packages
 install_node_packages
 set_up_dnsmasq
