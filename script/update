@@ -73,6 +73,7 @@ install_pipx_packages()
 {
     if [ -x "$(command -v pipx)" ]; then
         echo "==> Installing/updating pipx packages..."
+        pipx_install_if_not_exists argcomplete
         pipx_install_if_not_exists datasette
         pipx_install_if_not_exists litecli
         pipx_install_if_not_exists poetry
