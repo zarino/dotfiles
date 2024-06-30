@@ -74,9 +74,9 @@ install_pipx_packages()
     if [ -x "$(command -v pipx)" ]; then
         echo "==> Installing/updating pipx packages..."
         pipx_install_if_not_exists datasette
-        # pipx_install_if_not_exists csvs-to-sqlite
         pipx_install_if_not_exists litecli
         pipx_install_if_not_exists poetry
+        pipx_install_if_not_exists sqlite-utils
 
         # fonttools, brotli, and zopfli for (npm) font-ranger
         # https://github.com/doasync/font-ranger
