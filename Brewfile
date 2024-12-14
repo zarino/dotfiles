@@ -10,7 +10,9 @@ brew "atomicparsley" # https://github.com/yt-dlp/yt-dlp#dependencies
 brew "blueutil"
 brew "closure-compiler"
 brew "dnsmasq", restart_service: true
+brew "exiftool"
 brew "homebrew-ffmpeg/ffmpeg/ffmpeg", args: ["with-fdk-aac"]
+brew "findutils" # GNU find and xargs, as gfind and gxargs
 brew "fontforge"
 brew "gifsicle"
 brew "git"
@@ -28,6 +30,7 @@ brew "pipx"
 brew "postgresql@14", restart_service: true
 brew "python"
 brew "rbenv"
+brew "rename" # rename command, useful when combined with gfind
 brew "restic"
 brew "rsync"
 brew "sass/sass/sass"
