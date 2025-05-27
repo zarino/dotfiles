@@ -60,6 +60,8 @@ install_ruby_and_gems()
 install_node_packages()
 {
     if [ -x "$(command -v npm)" ]; then
+        echo "==> Updating npm..."
+        npm update --global --loglevel=error npm
         echo "==> Installing/updating node packages..."
         # note: npm install installs or updates to latest version
         npm install --global --loglevel=error font-ranger
