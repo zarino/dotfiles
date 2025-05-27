@@ -131,6 +131,10 @@ export PATH="$ANDROID_SDK_ROOT/emulator:${PATH}"
 # https://docs.docker.com/desktop/install/mac-install/
 export PATH="${HOME}/.docker/bin:${PATH}"
 
+# https://www.docker.com/blog/docker-desktop-4-25/
+# https://stackoverflow.com/questions/66662820/#comment138263238_76586216
+# export DOCKER_DEFAULT_PLATFORM=linux/amd64
+
 # Add ~/bin to the path, ahead of all others.
 export PATH="${HOME}/bin:${PATH}"
 
