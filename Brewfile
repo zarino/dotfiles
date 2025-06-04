@@ -45,6 +45,7 @@ brew "wp-cli"
 brew "yt-dlp"
 
 cask "android-platform-tools" # for adb
+cask "deskpad"
 cask "rar"
 cask "sequel-ace"
 cask "qlvideo"
