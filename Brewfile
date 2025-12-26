@@ -4,7 +4,7 @@ tap "dart-lang/dart"
 tap "homebrew-ffmpeg/ffmpeg"
 tap "mutagen-io/mutagen"
 tap "sass/sass"
-tap "teamookla/speedtest"
+tap "steamre/tools"
 
 brew "atomicparsley" # https://github.com/yt-dlp/yt-dlp#dependencies
 brew "blueutil"
@@ -34,7 +34,7 @@ brew "rename" # rename command, useful when combined with gfind
 brew "restic"
 brew "rsync"
 brew "sass/sass/sass"
-brew "speedtest"
+brew "speedtest-cli"
 brew "ssh-copy-id"
 brew "svgo"
 brew "telnet"
@@ -45,6 +45,7 @@ brew "wp-cli"
 brew "yt-dlp"
 
 cask "android-platform-tools" # for adb
+cask "depotdownloader" # https://github.com/SteamRE/DepotDownloader
 cask "deskpad"
 cask "rar"
 cask "sequel-ace"
