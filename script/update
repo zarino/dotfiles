@@ -67,7 +67,6 @@ install_node_packages()
         npm install --global --loglevel=error font-ranger
         npm install --global --loglevel=error localtunnel
         npm install --global --loglevel=error mapshaper
-        npm install --global --loglevel=error @anthropic-ai/claude-code
     fi
 }
 

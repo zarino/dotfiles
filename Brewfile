@@ -45,6 +45,7 @@ brew "wp-cli"
 brew "yt-dlp"
 
 cask "android-platform-tools" # for adb
+cask "claude-code"
 cask "depotdownloader" # https://github.com/SteamRE/DepotDownloader
 cask "deskpad"
 cask "rar"
