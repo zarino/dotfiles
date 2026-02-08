@@ -8,7 +8,6 @@ tap "steamre/tools"
 
 brew "atomicparsley" # https://github.com/yt-dlp/yt-dlp#dependencies
 brew "blueutil"
-brew "closure-compiler"
 brew "dnsmasq", restart_service: true
 brew "exiftool"
 brew "homebrew-ffmpeg/ffmpeg/ffmpeg", args: ["with-fdk-aac"]
