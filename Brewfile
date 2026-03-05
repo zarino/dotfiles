@@ -23,6 +23,7 @@ brew "mcrypt"
 brew "moreutils"
 brew "mutagen-io/mutagen/mutagen" # https://github.com/yt-dlp/yt-dlp#dependencies
 brew "node"
+brew "poetry"
 brew "php", restart_service: true
 brew "phpmyadmin"
 brew "pipx"
